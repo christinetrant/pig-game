@@ -1,12 +1,4 @@
 /*
-GAME RULES:
-
-- The game has 2 players, playing in rounds
-- In each turn, a player rolls a dice as many times as he wishes. Each result get added to his ROUND score
-- BUT, if the player rolls a 1, all his ROUND score gets lost. After that, it's the next player's turn
-- The player can choose to 'Hold', which means that his ROUND score gets added to his GLBAL score. After that, it's the next player's turn
-- The first player to reach 100 points on GLOBAL score wins the game
-
 BONUS:
 1.
   A player lose his ENTIRE (global?) score when he rolls two sixes in a row.  After that, it's the next player's turn.
@@ -21,65 +13,26 @@ BONUS:
 
 var scores, roundScore, activePlayer, gamePlaying, lastRoll, winScore;
 
-/*
-BONUS 1 - OPTION 2:
- var thisRoll, count;
- count=0;
- lastRoll=0;
-*/
-
-//All the code we created to start the game off at zero also needs to be used when the new game button is clicked - we create an initial function and call it to save repeating code - DRY
 init();
-
-// EVENTS - An EVENT LISTENER is a function that performs an action based on a certain event.  It waits for a specific event to happen.
-//ROLL DICE BUTTON:  for more options look up MDN EVENT REFERENCE
-//This is a callback function where the function is called once the btn-roll button is clicked
-/*function btn() {
-  //Do something
-}
-btn();
-document.querySelector('.btn-roll').addEventListener('click', btn) {
-  //Do something
-}*/
 
   //In this case we only use the function once the btn-roll button is clicked so we use an anonymous function which is within the event listener
   document.querySelector('.btn-roll').addEventListener('click', function() {
-    //gamePlaying - is our game over or still in play?
     //Need to do all this IF our game is still in play! if game play is true then:
     if (gamePlaying) {               
-
       // 1. Random Number
-      //Calculate Dice Roll Result   
-      //.floor removes the decimal   //.random creates a random number
-      //Dice doesn't need to be globally defined so we move it in here
       var dice = Math.floor(Math.random()*6) + 1;
-      // var dice = 6;
-
-      // BONUS 1 - OPTION 2:
-      // thisRoll = dice;
-      // if(dice === 6) {
-      //   lastRoll = 6;
-      //   count += 1;
-      // } else {
-      //   lastRoll = 0;
-      //   count = 0;
-      // }
-
-      // if (thisRoll === 6 && lastRoll === 6 && count === 2) {
-      //   console.log("Six twice!");
-      //   thisRoll = 0;
-      //   count = 0;
-      //   nextPlayer();
-      //   return;
-      // }
-
       // 2. Display result
       var diceDOM = document.querySelector('.dice');
       diceDOM.style.display = 'block'; // once dice is rolled we want to display result
-      diceDOM.src = 'img/dice-' + dice + '.png'; // selects png of dice number we've calculated
-
+      diceDOM.src = 'img/dice-'+dice+'.png'; // selects png of dice number we've calculated
       // 3. Update the round's score IF the rolled dice number is NOT a 1
-      if(dice !== 1) {
+      if(dice === 6 && lastRoll === 6) {
+        //Delete scores
+        scores[activePlayer] = 0;
+        document.querySelector('#score-' + activePlayer).textContent = '0';
+        nextPlayer();
+        console.log('2 sixes');
+      } else if(dice !== 1) {
         //Add score
         roundScore += dice;
         //This is displayed in players current score box
@@ -88,20 +41,8 @@ document.querySelector('.btn-roll').addEventListener('click', btn) {
         //NEXT PLAYER
         nextPlayer();
       }
-
       //4. BONUS: Player loses their ENTIRE (scores[activePlayer]) score when they roll two sixes in a row
-      if(dice === 6 && lastRoll === 6) {
-        //Reset lastRoll to 0
-        lastRoll=0;
-        //Delete scores
-        scores[activePlayer] = 0;
-        // console.log("Two Sixes rolled in a row!");
-        //NEXT PLAYER
-        nextPlayer();
-      } else {
-        //lastRoll = 6
-        lastRoll = dice;
-      }
+      lastRoll = dice;
 
     } //else nothing             
 });
@@ -117,20 +58,13 @@ document.querySelector('.btn-hold').addEventListener('click', function() {
     // 2. Update the UI
     document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer];
 
-    // Check if the player has input a winning score:
-    var input = document.getElementById('set-score').value;
-    //console.log(input);
-    var winScore;
-
-    // Undefined, 0, null or "" are COERCED to false
-    // Anything else is coerced to true.
-    if(input) {
-      winScore = input;
+    // 3. Check if the player has won the game:
+    if(setScore) {
+      document.getElementById('setScore').value = winScore;
     } else {
       winScore = 100;
     }
 
-    // 3. Check if the player has won the game:
     if (scores[activePlayer] >= winScore) {
         document.querySelector('#name-' + activePlayer).textContent = 'Winner!';
         document.querySelector('.dice').style.display = 'none';
