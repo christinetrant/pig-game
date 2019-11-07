@@ -1,57 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <!-- <link href="https://fonts.googleapis.com/css?family=Lato:100,300,600" rel="stylesheet" type="text/css"> -->
-        <link href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css">
-        <link type="text/css" rel="stylesheet" href="style.css">
-        
-        <title>Pig Game</title>
-    </head>
+<head>
+	<meta charset="UTF-8">
+	<link href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css">
+	<link type="text/css" rel="stylesheet" href="style.css">
 
-    <body>
-        <div class="wrapper clearfix">
-            <div class="player-0-panel active">
-                <div class="player-name" id="name-0">Player 1</div>
-                <div class="player-score" id="score-0">43</div>
-                <div class="player-current-box">
-                    <div class="player-current-label">Current</div>
-                    <div class="player-current-score" id="current-0">11</div>
-                </div>
-            </div>
-            
-            <div class="player-1-panel">
-                <div class="player-name" id="name-1">Player 2</div>
-                <div class="player-score" id="score-1">72</div>
-                <div class="player-current-box">
-                    <div class="player-current-label">Current</div>
-                    <div class="player-current-score" id="current-1">0</div>
-                </div>
-            </div>
-            
-            <button class="btn-new"><i class="ion-ios-plus-outline"></i>New game</button>
-            <button class="btn-roll"><i class="ion-ios-loop"></i>Roll dice</button>
-            <button class="btn-hold"><i class="ion-ios-download-outline"></i>Hold</button>
+	<title>Pig Game</title>
+</head>
 
-            <input type="text" id="set-score" placeholder="Set Winning Score!">
-            
-            <img src="img/dice-5.png" alt="Dice" class="dice">
-            <img src="img/dice-3.png" alt="Dice" class="dice2">
+<body>
+	<div class="wrapper clearfix">
+		<div class="player-0-panel active">
+			<div class="player-name" id="name-0">Player 1</div>
+			<div class="player-score" id="score-0">43</div>
+			<div class="player-current-box">
+				<div class="player-current-label">Current</div>
+				<div class="player-current-score" id="current-0">11</div>
+			</div>
+		</div>
 
-            <a href="#" class="help"><i class="ion-help-circled"></i></a>
-        </div>
-        
-        <div class="help-rules">
+		<div class="player-1-panel">
+			<div class="player-name" id="name-1">Player 2</div>
+			<div class="player-score" id="score-1">72</div>
+			<div class="player-current-box">
+				<div class="player-current-label">Current</div>
+				<div class="player-current-score" id="current-1">0</div>
+			</div>
+		</div>
 
-            <h3>GAME RULES:</h3>
-            <p>Score points by rolling the dice. Fist player to 100 wins.</p>
-            <p>If you roll a 1, you lose your turn. If a 6 is rolled twice in a row, you lose all your points and your turn.</p>
-            <p>You can keep your current score and pass by clicking hold.</p>
-            <p>You can set the winning score to something different in the box.</p>
+		<button class="btn-new"><i class="ion-ios-plus-outline"></i>New game</button>
+		<button class="btn-roll"><i class="ion-ios-loop"></i>Roll dice</button>
+		<button class="btn-hold"><i class="ion-ios-download-outline"></i>Hold</button>
 
-            <a href="" class="help-rules-close"><i class="ion-close-round"></i>Close</a>
-        </div>
+		<input type="text" id="set-score" placeholder="Set Winning Score!">
 
-        <script src="app.js"></script>
-    </body>
+		<img src="img/dice-5.png" alt="Dice" class="dice" id="dice-1">
+		<img src="img/dice-3.png" alt="Dice" class="dice" id="dice-2">
+
+		<a href="#" class="help"><i class="ion-help-circled"></i></a>
+	</div>
+
+	<div class="help-rules">
+
+		<h3>GAME RULES:</h3>
+		<p>Score points by rolling the dice. Fist player to 100 wins.</p>
+		<p>If you roll a one, you lose your turn. If double sixes are rolled twice in a row, you lose all your points and your turn.</p>
+		<p>You can keep your current score and pass by clicking hold.</p>
+		<p>You can set the winning score to something different in the box.</p>
+
+		<a href="" class="help-rules-close"><i class="ion-close-round"></i>Close</a>
+	</div>
+
+	<script src="app.js"></script>
+</body>
 </html>

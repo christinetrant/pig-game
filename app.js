@@ -17,7 +17,7 @@ BONUS:
 3.
   Add another dice to the game, so that there are two dices now.  The player loses their current score when one of them is a 1.  
   (HINT: You will need to use CSS to position the second dice, so look at the CSS for the first one)
-*/
+  */
 
 // CHECK NOT IN PORTRAIT MODE!
 // if(window.innerHeight > window.innerWidth){
@@ -25,10 +25,10 @@ BONUS:
 // }
 
 screen.orientation.onchange = function () {
-     var type = screen.orientation.type;
-     if (type.match(/portrait/)) {
-         alert('Please flip to landscape, to use this app!');
-     }
+ var type = screen.orientation.type;
+ if (type.match(/portrait/)) {
+   alert('Please flip to landscape, to use this app!');
+ }
 }
 
 var scores, roundScore, activePlayer, gamePlaying, lastRoll, winScore;
@@ -38,7 +38,7 @@ BONUS 1 - OPTION 2:
  var thisRoll, count;
  count=0;
  lastRoll=0;
-*/
+ */
 
 //All the code we created to start the game off at zero also needs to be used when the new game button is clicked - we create an initial function and call it to save repeating code - DRY
 init();
@@ -64,7 +64,8 @@ document.querySelector('.btn-roll').addEventListener('click', btn) {
       //Calculate Dice Roll Result   
       //.floor removes the decimal   //.random creates a random number
       //Dice doesn't need to be globally defined so we move it in here
-      var dice = Math.floor(Math.random()*6) + 1;
+      var dice1 = Math.floor(Math.random()*6) + 1;
+      var dice2 = Math.floor(Math.random()*6) + 1;
       // var dice = 6;
 
       // BONUS 1 - OPTION 2:
@@ -86,14 +87,15 @@ document.querySelector('.btn-roll').addEventListener('click', btn) {
       // }
 
       // 2. Display result
-      var diceDOM = document.querySelector('.dice');
-      diceDOM.style.display = 'block'; // once dice is rolled we want to display result
-      diceDOM.src = 'img/dice-' + dice + '.png'; // selects png of dice number we've calculated
+      document.getElementById('dice-1').style.display = 'block';
+      document.getElementById('dice-2').style.display = 'block';
+      document.getElementById('dice-1').src = 'img/dice-' + dice1 + '.png'; 
+      document.getElementById('dice-2').src = 'img/dice-' + dice2 + '.png'; 
 
       // 3. Update the round's score IF the rolled dice number is NOT a 1
-      if(dice !== 1) {
+      if(dice1 !== 1 && dice2 !== 1) {
         //Add score
-        roundScore += dice;
+        roundScore += dice1 + dice2;
         //This is displayed in players current score box
         document.querySelector('#current-' + activePlayer).textContent = roundScore;
       } else {
@@ -101,22 +103,22 @@ document.querySelector('.btn-roll').addEventListener('click', btn) {
         nextPlayer();
       }
 
-      //4. BONUS: Player loses their ENTIRE (scores[activePlayer]) score when they roll two sixes in a row
-      if(dice === 6 && lastRoll === 6) {
+      //4. BONUS: Player loses their ENTIRE (scores[activePlayer]) score when they roll two double sixes in a row
+      if((dice1+dice2) === 12 && lastRoll === 12) {
         //Reset lastRoll to 0
         lastRoll=0;
         //Delete scores
         scores[activePlayer] = 0;
-        // console.log("Two Sixes rolled in a row!");
+        console.log("Two Sixes rolled in a row!");
         //NEXT PLAYER
         nextPlayer();
       } else {
-        //lastRoll = 6
-        lastRoll = dice;
+        //lastRoll = 12
+        lastRoll = 12;
       }
 
     } //else nothing             
-});
+  });
 
 //Button hold event listener:
 document.querySelector('.btn-hold').addEventListener('click', function() {
@@ -144,8 +146,10 @@ document.querySelector('.btn-hold').addEventListener('click', function() {
 
     // 3. Check if the player has won the game:
     if (scores[activePlayer] >= winScore) {
-        document.querySelector('#name-' + activePlayer).textContent = 'Winner!';
-        document.querySelector('.dice').style.display = 'none';
+      document.querySelector('#name-' + activePlayer).textContent = 'Winner!';
+      // document.getElementById('dice-1').style.display = 'none';
+      // document.getElementById('dice-2').style.display = 'none';
+      hideDice();
         // Winner css class - call it here & remove the active class
         document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
         document.querySelector('.player-' + activePlayer + '-panel').classList.remove('active');
@@ -156,7 +160,7 @@ document.querySelector('.btn-hold').addEventListener('click', function() {
         nextPlayer();
       }
     }
-});
+  });
 
 
 //NEXT PLAYER FUNCTION
@@ -178,7 +182,9 @@ function nextPlayer() {
   document.querySelector('.player-1-panel').classList.toggle('active');
 
   //When the player rolls 1 we want to hide the dice for the next user to roll:
-  document.querySelector('.dice').style.display = 'none';
+  // document.getElementById('dice-1').style.display = 'none';
+  // document.getElementById('dice-2').style.display = 'none';
+  hideDice();
 }
 
 // NEW GAME BUTTON
@@ -200,7 +206,9 @@ function init() {
   document.getElementById('current-1').textContent = 0;
 
   //can change the css of dice class - we want to hide the dice class at the beginning of the game
-  document.querySelector('.dice').style.display = 'none';
+  // document.getElementById('dice-1').style.display = 'none';
+  // document.getElementById('dice-2').style.display = 'none';
+  hideDice();
 
   //change the text to Player 1 and Player 2 in case of Winners in previous game:
   document.getElementById('name-0').textContent = 'Player 1';
@@ -214,6 +222,11 @@ function init() {
   document.querySelector('.player-0-panel').classList.add('active');
 }
 
+// Function to set dice display style to none:
+function hideDice() {
+  document.getElementById('dice-1').style.display = 'none';
+  document.getElementById('dice-2').style.display = 'none';
+}
 
 /*
 BONUS 2 - WINNER SCORE INPUT BUTTON
