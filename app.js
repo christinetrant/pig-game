@@ -19,106 +19,71 @@ BONUS:
   (HINT: You will need to use CSS to position the second dice, so look at the CSS for the first one)
   */
 
-// CHECK NOT IN PORTRAIT MODE!
-// if(window.innerHeight > window.innerWidth){
-//     alert("Please use Landscape!");
+// screen.orientation.onchange = function () {
+//  var type = screen.orientation.type;
+//  if (type.match(/portrait/)) {
+//    alert('Please flip to landscape, to use this app!');
+//  }
 // }
+var orientation = screen.msOrientation || screen.mozOrientation || (screen.orientation || {}).type;
 
-screen.orientation.onchange = function () {
- var type = screen.orientation.type;
- if (type.match(/portrait/)) {
-   alert('Please flip to landscape, to use this app!');
- }
+if (orientation === "landscape-primary") {
+  console.log("That looks good.");
+} else if (orientation === "landscape-secondary") {
+  console.log("Mmmh... the screen is upside down!");
+} else if (orientation === "portrait-secondary" || orientation === "portrait-primary") {
+  console.log("Mmmh... you should rotate your device to landscape");
+  alert('Please flip to landscape, to use this app!');
+} else if (orientation === undefined) {
+  console.log("The orientation API isn't supported in this browser :("); 
 }
+
 
 var scores, roundScore, activePlayer, gamePlaying, lastRoll, winScore;
 
-/*
-BONUS 1 - OPTION 2:
- var thisRoll, count;
- count=0;
- lastRoll=0;
- */
-
-//All the code we created to start the game off at zero also needs to be used when the new game button is clicked - we create an initial function and call it to save repeating code - DRY
 init();
 
-// EVENTS - An EVENT LISTENER is a function that performs an action based on a certain event.  It waits for a specific event to happen.
-//ROLL DICE BUTTON:  for more options look up MDN EVENT REFERENCE
-//This is a callback function where the function is called once the btn-roll button is clicked
-/*function btn() {
-  //Do something
-}
-btn();
-document.querySelector('.btn-roll').addEventListener('click', btn) {
-  //Do something
-}*/
+document.querySelector('.btn-roll').addEventListener('click', function() {
+  //gamePlaying - is our game over or still in play?
+  //Need to do all this IF our game is still in play! if game play is true then:
+  if (gamePlaying) {               
+    // 1. Random Number
+    var dice1 = Math.floor(Math.random()*6) + 1;
+    var dice2 = Math.floor(Math.random()*6) + 1;
 
-  //In this case we only use the function once the btn-roll button is clicked so we use an anonymous function which is within the event listener
-  document.querySelector('.btn-roll').addEventListener('click', function() {
-    //gamePlaying - is our game over or still in play?
-    //Need to do all this IF our game is still in play! if game play is true then:
-    if (gamePlaying) {               
+    // 2. Display result
+    document.getElementById('dice-1').style.display = 'block';
+    document.getElementById('dice-2').style.display = 'block';
+    document.getElementById('dice-1').src = 'img/dice-' + dice1 + '.png'; 
+    document.getElementById('dice-2').src = 'img/dice-' + dice2 + '.png'; 
 
-      // 1. Random Number
-      //Calculate Dice Roll Result   
-      //.floor removes the decimal   //.random creates a random number
-      //Dice doesn't need to be globally defined so we move it in here
-      var dice1 = Math.floor(Math.random()*6) + 1;
-      var dice2 = Math.floor(Math.random()*6) + 1;
-      // var dice = 6;
+    // 3. Update the round's score IF the rolled dice number is NOT a 1
+    if(dice1 !== 1 && dice2 !== 1) {
+      //Add score
+      roundScore += dice1 + dice2;
+      //This is displayed in players current score box
+      document.querySelector('#current-' + activePlayer).textContent = roundScore;
+    } else {
+      alert("You rolled a 1!");
+      //NEXT PLAYER
+      nextPlayer();
+    }
 
-      // BONUS 1 - OPTION 2:
-      // thisRoll = dice;
-      // if(dice === 6) {
-      //   lastRoll = 6;
-      //   count += 1;
-      // } else {
-      //   lastRoll = 0;
-      //   count = 0;
-      // }
-
-      // if (thisRoll === 6 && lastRoll === 6 && count === 2) {
-      //   console.log("Six twice!");
-      //   thisRoll = 0;
-      //   count = 0;
-      //   nextPlayer();
-      //   return;
-      // }
-
-      // 2. Display result
-      document.getElementById('dice-1').style.display = 'block';
-      document.getElementById('dice-2').style.display = 'block';
-      document.getElementById('dice-1').src = 'img/dice-' + dice1 + '.png'; 
-      document.getElementById('dice-2').src = 'img/dice-' + dice2 + '.png'; 
-
-      // 3. Update the round's score IF the rolled dice number is NOT a 1
-      if(dice1 !== 1 && dice2 !== 1) {
-        //Add score
-        roundScore += dice1 + dice2;
-        //This is displayed in players current score box
-        document.querySelector('#current-' + activePlayer).textContent = roundScore;
-      } else {
-        //NEXT PLAYER
-        nextPlayer();
-      }
-
-      //4. BONUS: Player loses their ENTIRE (scores[activePlayer]) score when they roll two double sixes in a row
-      if((dice1+dice2) === 12 && lastRoll === 12) {
-        //Reset lastRoll to 0
-        lastRoll=0;
-        //Delete scores
-        scores[activePlayer] = 0;
-        console.log("Two Sixes rolled in a row!");
-        //NEXT PLAYER
-        nextPlayer();
-      } else {
-        //lastRoll = 12
-        lastRoll = 12;
-      }
-
-    } //else nothing             
-  });
+    //4. BONUS: Player loses their ENTIRE (scores[activePlayer]) score when they roll two double sixes in a row
+    if((dice1+dice2) === 12 && lastRoll === 12) {
+      //Reset lastRoll to 0
+      lastRoll=0;
+      //Delete scores
+      scores[activePlayer] = 0;
+      alert("Two Sixes rolled in a row!");
+      //NEXT PLAYER
+      nextPlayer();
+    } else {
+      //lastRoll = 12
+      lastRoll = 12;
+    }
+  } //else nothing             
+});
 
 //Button hold event listener:
 document.querySelector('.btn-hold').addEventListener('click', function() {
@@ -150,18 +115,17 @@ document.querySelector('.btn-hold').addEventListener('click', function() {
       // document.getElementById('dice-1').style.display = 'none';
       // document.getElementById('dice-2').style.display = 'none';
       hideDice();
-        // Winner css class - call it here & remove the active class
-        document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
-        document.querySelector('.player-' + activePlayer + '-panel').classList.remove('active');
-        //As the game has been won - the game is over:
-        gamePlaying = false;
-      } else {
-        //Instead of duplicating code we take the next player code from first event listener and create a separate global function so we can call it from both eventListeners
-        nextPlayer();
-      }
+      // Winner css class - call it here & remove the active class
+      document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
+      document.querySelector('.player-' + activePlayer + '-panel').classList.remove('active');
+      //As the game has been won - the game is over:
+      gamePlaying = false;
+    } else {
+      //Instead of duplicating code we take the next player code from first event listener and create a separate global function so we can call it from both eventListeners
+      nextPlayer();
     }
-  });
-
+  }
+});
 
 //NEXT PLAYER FUNCTION
 function nextPlayer() {
@@ -173,17 +137,10 @@ function nextPlayer() {
   document.getElementById('current-0').textContent = 0;
   document.getElementById('current-1').textContent = 0;
 
-  //we want the css active class to be on the active player(in html it is in player-0-panel):
-    //document.querySelector('player-0-panel').classList.remove('active');
-    //document.querySelector('player-1-panel').classList.add('active');
-
   //Instead of the above removing and adding we can toggle:
   document.querySelector('.player-0-panel').classList.toggle('active');
   document.querySelector('.player-1-panel').classList.toggle('active');
 
-  //When the player rolls 1 we want to hide the dice for the next user to roll:
-  // document.getElementById('dice-1').style.display = 'none';
-  // document.getElementById('dice-2').style.display = 'none';
   hideDice();
 }
 
@@ -205,9 +162,6 @@ function init() {
   document.getElementById('current-0').textContent = 0;
   document.getElementById('current-1').textContent = 0;
 
-  //can change the css of dice class - we want to hide the dice class at the beginning of the game
-  // document.getElementById('dice-1').style.display = 'none';
-  // document.getElementById('dice-2').style.display = 'none';
   hideDice();
 
   //change the text to Player 1 and Player 2 in case of Winners in previous game:
@@ -228,43 +182,7 @@ function hideDice() {
   document.getElementById('dice-2').style.display = 'none';
 }
 
-/*
-BONUS 2 - WINNER SCORE INPUT BUTTON
-*/
-
-// document.querySelector('.btn-set').addEventListener('click', function() {
-//   winScore = document.getElementById('setScore').value;
-//   console.log(winScore);
-
-//   document.getElementById('setScore').value = winScore;
-
-//   //hide option for score setting?????
-//   //ADD TO NEW GAME BUTTON??????????????????????
-
-//   //STYLE UP BETTER!!!!!!!!!!!!
-//   document.querySelector('header').style.display = 'none';
-//   document.querySelector('.wrapper').style.margin = '0';
-
-// });
-
-
-/*
-//querySelector selects Id or class but the first one it finds
-//textContent changes the text to show the dice result
-    //document.querySelector('#current-0').textContent = dice;
-//We can change current player to alternate between players by the following:
-document.querySelector('#current-' + activePlayer).textContent = dice;
-
-//To change content of HTML as well as text:
-    //document.querySelector('#current-' + activePlayer).innerHTML = '<em>' +dice+ '</em>';
-
-//reads the value of  ID score-0 - this is called a GETTER instead of above which are SETTERS
-var x = document.querySelector('#score-0').textContent;
-console.log(x);
-
-*/
-
-// HELP button
+// HELP button to explain rules of game
 document.querySelector('.help').addEventListener('click', function () {
   document.querySelector('.help-rules').classList.add('visible');
 })
