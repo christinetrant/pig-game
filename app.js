@@ -238,3 +238,13 @@ var x = document.querySelector('#score-0').textContent;
 console.log(x);
 
 */
+
+
+// HELP button
+document.querySelector('.help').addEventListener('click', function () {
+  document.querySelector('.help-rules').classList.add('visible');
+})
+
+document.querySelector('.help-rules-close').addEventListener('click', function () {
+  document.querySelector('.help-rules').classList.remove('visible');
+})
