@@ -19,6 +19,18 @@ BONUS:
   (HINT: You will need to use CSS to position the second dice, so look at the CSS for the first one)
 */
 
+// CHECK NOT IN PORTRAIT MODE!
+// if(window.innerHeight > window.innerWidth){
+//     alert("Please use Landscape!");
+// }
+
+screen.orientation.onchange = function () {
+     var type = screen.orientation.type;
+     if (type.match(/portrait/)) {
+         alert('Please flip to landscape, to use this app!');
+     }
+}
+
 var scores, roundScore, activePlayer, gamePlaying, lastRoll, winScore;
 
 /*
@@ -238,7 +250,6 @@ var x = document.querySelector('#score-0').textContent;
 console.log(x);
 
 */
-
 
 // HELP button
 document.querySelector('.help').addEventListener('click', function () {
