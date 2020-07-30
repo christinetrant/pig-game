@@ -1,6 +1,6 @@
 # Pig Game
 
-A game coded using HTML, CSS & vanilla javascript, coded along with Udemy Z2M course.
+A game coded using HTML, CSS & vanilla javascript, coded along with Udemy Javascript course.
 
 [Demo][1]
 
